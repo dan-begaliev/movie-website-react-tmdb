@@ -35,13 +35,13 @@ function App() {
                     );
                 })}
                 <div className="col-md-4 mb-3">
-                    <Link
+                    {/* <Link
                         to={"/movies"}
                         onClick={() => setSelectedMovieCategory("My List", "my_list")}
                         className="btn btn-success"
                         style={Styles.btn}>
                         My List
-                    </Link>
+                    </Link> */}
                 </div>
             </div>
         </div>
