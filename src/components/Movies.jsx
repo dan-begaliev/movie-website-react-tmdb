@@ -38,7 +38,7 @@ const Movies = () => {
 
     useEffect(() => {
         movieCategory.code === "my_list" && setMoviesList(myMovieList);
-        localStorage.setItem("movieList", JSON.stringify(myMovieList));
+        myMovieList.length > 0 && localStorage.setItem("movieList", JSON.stringify(myMovieList));
     }, [movieCategory.code, myMovieList]);
 
     useEffect(() => {
