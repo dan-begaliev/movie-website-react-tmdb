@@ -13,7 +13,7 @@ export const movieSlice = createSlice({
             state.selectedCategory = action.payload;
         },
         myMovieListAddAction: (state, action) => {
-            state.myMovieList.push(action.payload);
+            state.myMovieList?.push(action.payload);
             return state;
         },
         myMovieListRemoveAction: (state, action) => {
