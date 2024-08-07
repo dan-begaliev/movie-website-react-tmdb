@@ -17,7 +17,7 @@ export const movieSlice = createSlice({
             return state;
         },
         myMovieListRemoveAction: (state, action) => {
-            const filteredMovieList = state.myMovieList.filter((movie) => movie.id !== action.payload);
+            const filteredMovieList = state.myMovieList?.filter((movie) => movie.id !== action.payload);
             state.myMovieList = [...filteredMovieList];
             return state;
         },

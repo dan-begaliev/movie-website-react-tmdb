@@ -61,7 +61,7 @@ const Movie = () => {
     };
 
     const isMovieBookmarked = (id) => {
-        if (myMovieList.filter((el) => el.id === id).length >= 1) return true;
+        if (myMovieList?.filter((el) => el.id === id).length >= 1) return true;
         return false;
     };
 
@@ -82,9 +82,6 @@ const Movie = () => {
             />
         );
     };
-
-
-
 
     useEffect(() => {
         fetchMovieById(params?.movieId);
