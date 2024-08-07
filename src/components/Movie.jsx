@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Ratings from "./Ratings";
 import Modal from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { myMovieListAddAction } from "../redux/movieSlice";
+import { myMovieListAddAction, myMovieListRemoveAction } from "../redux/movieSlice";
 
 const Movie = () => {
     const dispatch = useDispatch();
@@ -48,7 +48,11 @@ const Movie = () => {
     };
 
     const saveToMovieList = (id, title) => {
-        dispatch(myMovieListAddAction({ id, title }));
+        dispatch(myMovieListAddAction({ id, original_title: title }));
+    };
+
+    const removeMovieFromList = (id) => {
+        dispatch(myMovieListRemoveAction(id));
     };
 
     const handleOnTrailerBtn = (id) => {
@@ -61,18 +65,44 @@ const Movie = () => {
         return false;
     };
 
+    const getBookmark = () => {
+        return isMovieBookmarked(selectedMovie.id) ? (
+            <i
+                onClick={() => {
+                    removeMovieFromList(selectedMovie.id);
+                }}
+                className="bi bi-bookmark-check-fill"
+                style={Styles.bookmarkIcon}
+            />
+        ) : (
+            <i
+                onClick={() => !isMovieBookmarked(selectedMovie.id) && saveToMovieList(selectedMovie.id, selectedMovie.original_title)}
+                className="bi bi-bookmark-plus"
+                style={Styles.bookmarkIcon}
+            />
+        );
+    };
+
+
+
+
+    useEffect(() => {
+        fetchMovieById(params?.movieId);
+    }, [params]);
+
     const Styles = {
         image: {
             width: "100%",
         },
         bookmarkIcon: {
-            fontSize: "1.5rem",
+            fontSize: "1.75rem",
+        },
+        bookmarkIconPosition: {
+            position: "absolute",
+            top: -4,
+            right: 0,
         },
     };
-
-    useEffect(() => {
-        fetchMovieById(params?.movieId);
-    }, [params]);
 
     return (
         selectedMovie && (
@@ -81,21 +111,11 @@ const Movie = () => {
                     <img src={`https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`} style={Styles.image} />
                 </div>
 
-                <div className="col-md-8 bg-body-secondary p-3">
+                <div className="col-md-8 bg-body-secondary p-3" style={{ position: "relative" }}>
                     {/* Title and Tagline */}
                     <h3 className="bold">
                         {selectedMovie.original_title}
-                        {isMovieBookmarked(selectedMovie.id) ? (
-                            <i className="bi bi-bookmark-check-fill" style={Styles.bookmarkIcon} />
-                        ) : (
-                            <i
-                                onClick={() =>
-                                    !isMovieBookmarked(selectedMovie.id) && saveToMovieList(selectedMovie.id, selectedMovie.original_title)
-                                }
-                                className="bi bi-bookmark-plus"
-                                style={Styles.bookmarkIcon}
-                            />
-                        )}
+                        <div style={Styles.bookmarkIconPosition}>{getBookmark()}</div>
                     </h3>
 
                     <h6 className="fw-light">{selectedMovie.tagline}</h6>

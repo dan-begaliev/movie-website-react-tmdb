@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import "./App.css";
 import { useDispatch } from "react-redux";
-import { selectedCategoryAction } from "./redux/movieSlice";
+import { myInitalMovieListAction, selectedCategoryAction } from "./redux/movieSlice";
+import { useEffect } from "react";
 
 function App() {
     const dispatch = useDispatch();
@@ -18,30 +19,27 @@ function App() {
         dispatch(selectedCategoryAction({ name: categoryName, code: categoryCode }));
     };
 
+    useEffect(() => {
+        const myMovieListLocalStorage = localStorage.getItem("movieList");
+        dispatch(myInitalMovieListAction(JSON.parse(myMovieListLocalStorage)));
+    }, []);
+
     return (
         <div className="container">
             <div className="row mt-5">
                 {buttonConfig.map((btn, i) => {
                     return (
                         <div key={i} className="col-md-4 mb-3">
-                            <Link
-                                to={"/movies"}
-                                onClick={() => setSelectedMovieCategory(btn.name, btn.code)}
-                                className="btn btn-dark"
-                                style={Styles.btn}>
+                            <Link to={"/movies"} onClick={() => setSelectedMovieCategory(btn.name, btn.code)} className="btn btn-dark" style={Styles.btn}>
                                 {btn.name}
                             </Link>
                         </div>
                     );
                 })}
                 <div className="col-md-4 mb-3">
-                    {/* <Link
-                        to={"/movies"}
-                        onClick={() => setSelectedMovieCategory("My List", "my_list")}
-                        className="btn btn-success"
-                        style={Styles.btn}>
+                    <Link to={"/movies"} onClick={() => setSelectedMovieCategory("My List", "my_list")} className="btn btn-success" style={Styles.btn}>
                         My List
-                    </Link> */}
+                    </Link>
                 </div>
             </div>
         </div>

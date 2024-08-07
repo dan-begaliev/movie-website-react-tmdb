@@ -5,9 +5,9 @@ import { useSelector } from "react-redux";
 
 const Movies = () => {
     const movieCategory = useSelector((state) => state.movies.selectedCategory);
-
+    const myMovieList = useSelector((state) => state.movies.myMovieList); // 5
     // useState store local state/data
-    const [moviesList, setMoviesList] = useState([]); //array of 20 movies info which contains id
+    const [moviesList, setMoviesList] = useState([]); // 5
     const [currentPage, setCurrentPage] = useState(1);
 
     const fetchMovies = async () => {
@@ -19,11 +19,10 @@ const Movies = () => {
             },
         };
 
-        if (movieCategory.code === "discover") {
-            fetch(
-                `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${currentPage}&sort_by=popularity.desc`,
-                options
-            )
+        if (movieCategory.code === "my_list") {
+            setMoviesList(myMovieList);
+        } else if (movieCategory.code === "discover") {
+            fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${currentPage}&sort_by=popularity.desc`, options)
                 .then((response) => response.json())
                 .then((response) => {
                     setMoviesList(response.results);
@@ -36,6 +35,11 @@ const Movies = () => {
                 .catch((err) => console.error(err));
         }
     };
+
+    useEffect(() => {
+        movieCategory.code === "my_list" && setMoviesList(myMovieList);
+        localStorage.setItem("movieList", JSON.stringify(myMovieList));
+    }, [movieCategory.code, myMovieList]);
 
     useEffect(() => {
         fetchMovies();
@@ -66,7 +70,7 @@ const Movies = () => {
             <div className="row">
                 <div className="col-md-3 ">
                     <div className="d-flex flex-column">
-                        {moviesList?.length &&
+                        {moviesList?.length > 0 &&
                             moviesList.map((el) => {
                                 return (
                                     <NavLink key={el.id} to={`/movies/${el.id}`} className={"btn btn-sm btn-outline-dark mb-1 w-100"}>
@@ -77,7 +81,7 @@ const Movies = () => {
                     </div>
 
                     {/* Pagination */}
-                    <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={200} />
+                    {moviesList?.length > 0 && <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={200} />}
                 </div>
 
                 <div className="col-md-9">{outlet || toast()}</div>
