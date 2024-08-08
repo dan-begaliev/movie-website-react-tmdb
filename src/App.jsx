@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import "./App.css";
 import { useDispatch } from "react-redux";
-import { myInitalMovieListAction, selectedCategoryAction } from "./redux/movieSlice";
-import { useEffect } from "react";
+import { selectedCategoryAction } from "./redux/movieSlice";
 
 function App() {
     const dispatch = useDispatch();
@@ -18,11 +17,6 @@ function App() {
     const setSelectedMovieCategory = (categoryName, categoryCode) => {
         dispatch(selectedCategoryAction({ name: categoryName, code: categoryCode }));
     };
-
-    useEffect(() => {
-        const myMovieListLocalStorage = localStorage.getItem("movieList");
-        dispatch(myInitalMovieListAction(JSON.parse(myMovieListLocalStorage)));
-    }, []);
 
     return (
         <div className="container">

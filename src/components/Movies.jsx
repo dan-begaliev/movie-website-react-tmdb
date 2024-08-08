@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, useOutlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useOutlet } from "react-router-dom";
 import Pagination from "./Pagination";
 import { useSelector } from "react-redux";
 
 const Movies = () => {
-    const movieCategory = useSelector((state) => state.movies.selectedCategory);
-    const myMovieList = useSelector((state) => state.movies.myMovieList); // 5
+    const movieCategory = useSelector((state) => state.selectedCategory);
+    const myMovieList = useSelector((state) => state.myMovieList); // 5
     // useState store local state/data
     const [moviesList, setMoviesList] = useState([]); // 5
     const [currentPage, setCurrentPage] = useState(1);
@@ -38,7 +38,6 @@ const Movies = () => {
 
     useEffect(() => {
         movieCategory.code === "my_list" && setMoviesList(myMovieList);
-        myMovieList.length > 0 && localStorage.setItem("movieList", JSON.stringify(myMovieList));
     }, [movieCategory.code, myMovieList]);
 
     useEffect(() => {
@@ -56,6 +55,13 @@ const Movies = () => {
                 </div>
             </div>
         );
+    };
+
+    const renderSingleMovie = () => {
+        if (moviesList?.length === 0) {
+            return <p>No Movies</p>;
+        }
+        return outlet || toast();
     };
 
     return (
@@ -84,7 +90,7 @@ const Movies = () => {
                     {moviesList?.length > 0 && <Pagination currentPage={currentPage} setCurrentPage={setCurrentPage} totalPages={200} />}
                 </div>
 
-                <div className="col-md-9">{outlet || toast()}</div>
+                <div className="col-md-9">{renderSingleMovie()}</div>
             </div>
         </div>
     );

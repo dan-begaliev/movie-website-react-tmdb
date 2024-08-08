@@ -7,7 +7,7 @@ import { myMovieListAddAction, myMovieListRemoveAction } from "../redux/movieSli
 
 const Movie = () => {
     const dispatch = useDispatch();
-    const myMovieList = useSelector((state) => state.movies.myMovieList);
+    const myMovieList = useSelector((state) => state.myMovieList);
     const params = useParams();
     const [selectedMovie, setSelectedMovie] = useState({});
     const [videoResponse, setVideoResponse] = useState([]);
