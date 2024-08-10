@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, NavLink, Outlet, useOutlet } from "react-router-dom";
+import { Link, NavLink, useOutlet } from "react-router-dom";
 import Pagination from "./Pagination";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { updateMyMovieListFromDb } from "../redux/movieSlice";
+import { getMovieList } from "../firebase";
 
 const Movies = () => {
+    const dispatch = useDispatch();
     const movieCategory = useSelector((state) => state.selectedCategory);
     const myMovieList = useSelector((state) => state.myMovieList); // 5
     // useState store local state/data
@@ -19,8 +22,13 @@ const Movies = () => {
             },
         };
 
+        const fetchData = async () => {
+            const fromDb = await getMovieList();
+            dispatch(updateMyMovieListFromDb(fromDb));
+        };
+
         if (movieCategory.code === "my_list") {
-            setMoviesList(myMovieList);
+            fetchData();
         } else if (movieCategory.code === "discover") {
             fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${currentPage}&sort_by=popularity.desc`, options)
                 .then((response) => response.json())
@@ -77,9 +85,9 @@ const Movies = () => {
                 <div className="col-md-3 ">
                     <div className="d-flex flex-column">
                         {moviesList?.length > 0 &&
-                            moviesList.map((el) => {
+                            moviesList.map((el, i) => {
                                 return (
-                                    <NavLink key={el.id} to={`/movies/${el.id}`} className={"btn btn-sm btn-outline-dark mb-1 w-100"}>
+                                    <NavLink key={i} to={`/movies/${el.id}`} className={"btn btn-sm btn-outline-dark mb-1 w-100"}>
                                         <p className="m-0 pe-2 text-truncate text-start">{el.original_title}</p>
                                     </NavLink>
                                 );

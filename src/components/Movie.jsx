@@ -4,6 +4,7 @@ import Ratings from "./Ratings";
 import Modal from "./Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { myMovieListAddAction, myMovieListRemoveAction } from "../redux/movieSlice";
+import { deleteMoviefromDb, saveToMovieListDb } from "../firebase";
 
 const Movie = () => {
     const dispatch = useDispatch();
@@ -48,10 +49,12 @@ const Movie = () => {
     };
 
     const saveToMovieList = (id, title) => {
+        saveToMovieListDb(String(id), title);
         dispatch(myMovieListAddAction({ id, original_title: title }));
     };
 
     const removeMovieFromList = (id) => {
+        deleteMoviefromDb(id);
         dispatch(myMovieListRemoveAction(id));
     };
 
@@ -69,7 +72,7 @@ const Movie = () => {
         return isMovieBookmarked(selectedMovie.id) ? (
             <i
                 onClick={() => {
-                    removeMovieFromList(selectedMovie.id);
+                    removeMovieFromList(selectedMovie.id, selectedMovie.docId);
                 }}
                 className="bi bi-bookmark-check-fill"
                 style={Styles.bookmarkIcon}
