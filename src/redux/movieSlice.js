@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     selectedCategory: { name: "", code: "" },
     myMovieList: [],
+    currentUser: null,
 };
 
 export const movieSlice = createSlice({
@@ -31,9 +32,14 @@ export const movieSlice = createSlice({
             state.myMovieList = action.payload;
             return state;
         },
+        saveCurrentUserAction: (state, action) => {
+            state.currentUser = action.payload;
+            return state;
+        },
     },
 });
 
-export const { selectedCategoryAction, myMovieListAddAction, myMovieListRemoveAction, myInitalMovieListAction, updateMyMovieListFromDb } = movieSlice.actions;
+export const { selectedCategoryAction, myMovieListAddAction, myMovieListRemoveAction, myInitalMovieListAction, updateMyMovieListFromDb, saveCurrentUserAction } =
+    movieSlice.actions;
 
 export default movieSlice.reducer;
